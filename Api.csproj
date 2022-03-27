@@ -5,10 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Domain\" />
-    <Folder Include="Apllication\" />
-    <Folder Include="Infrastructure\Configuration\" />
-    <Folder Include="Infrastructure\Repository\" />
+    <Folder Include="Apllication\Service\" />
   </ItemGroup>
 
   <ItemGroup>
