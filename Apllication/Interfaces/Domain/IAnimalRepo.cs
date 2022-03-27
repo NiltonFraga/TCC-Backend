@@ -9,6 +9,7 @@ namespace Api.Apllication.Interfaces.Domain
     public interface IAnimalRepo
     {
         Task<List<Animal>> GetAllAnimais();
+        Task<List<Animal>> GetAnimalByEmpresa(int id);
         Task<Animal> GetAnimal(int id);
         Task PostAnimal(Animal rq);
         Task UpdateAnimal(Animal rq);
