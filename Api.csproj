@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Apllication\Repository\Domain\UsuarioRepo - Cópia.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Apllication\Service\" />
   </ItemGroup>
 

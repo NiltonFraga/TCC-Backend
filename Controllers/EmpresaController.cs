@@ -24,6 +24,7 @@ namespace Api.Controllers
         [HttpGet]
         public IActionResult GetAllEmpresa()
         {
+
             var res = empresaRepo.GetAllEmpresas();
 
             return Ok(res);

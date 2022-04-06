@@ -14,7 +14,7 @@ namespace Api.Infrastructure
         public DbSet<Empresa> Empresas { get; set; }
         public DbSet<Adocao> Adocaos { get; set; }
 
-        private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
+        private readonly string ConectionString = "Server=localhost;Port=3307;Database=pets_database;User=root;Password=root";
 
         public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
         public ApiContext() { }

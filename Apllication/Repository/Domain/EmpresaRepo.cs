@@ -11,11 +11,13 @@ namespace Api.Apllication.Repository.Domain
 {
     public class EmpresaRepo : IEmpresaRepo
     {
-        public List<Empresa> GetAllEmpresas()
+        
+         public List<Empresa> GetAllEmpresas()
         {
             using var context = new ApiContext();
 
-            var empresas = context.Empresas.ToList();
+           
+        var empresas = context.Empresas.ToList();
 
             return empresas;
         }
