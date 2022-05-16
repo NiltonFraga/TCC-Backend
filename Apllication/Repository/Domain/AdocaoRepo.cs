@@ -12,11 +12,11 @@ namespace Api.Apllication.Repository.Domain
 {
     public class AdocaoRepo : IAdocaoRepo
     {
-        public async Task<List<Adocao>> GetAllAdocao()
+        public async Task<List<Adocao>> GetAllAdocoes()
         {
             using var context = new ApiContext();
 
-            List<Adocao> adocao = await context.Adocaos.ToListAsync();
+            List<Adocao> adocao = await context.Adocoes.ToListAsync();
 
             return adocao;
         }
@@ -25,25 +25,16 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            var adocao = await context.Adocaos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var adocao = await context.Adocoes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
             return adocao;
         }
 
-        /*public async Task<List<Usuario>> GetUsuarioByEmpresa(int id)
-        {
-            using var context = new ApiContext();
-
-            var usuario = await context.Usuarios.Where(x => x.IdEmpresa == id).ToListAsync();
-
-            return usuario;
-        }
-*/
         public async Task PostAdocao(Adocao rq)
         {
             using var context = new ApiContext();
 
-            await context.Adocaos.AddAsync(rq);
+            await context.Adocoes.AddAsync(rq);
 
             await context.SaveChangesAsync();
 
@@ -53,7 +44,7 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            context.Adocaos.Update(rq);
+            context.Adocoes.Update(rq);
 
             await context.SaveChangesAsync();
         }
@@ -62,16 +53,11 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            var adocao = await context.Adocaos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var adocao = await context.Adocoes.Where(x => x.Id == id).FirstOrDefaultAsync();
 
-            context.Adocaos.Remove(adocao);
+            context.Adocoes.Remove(adocao);
 
             await context.SaveChangesAsync();
-        }
-
-        public Task<List<Adocao>> GetAdocaoByAdocao(int id)
-        {
-            throw new NotImplementedException();
         }
     }
 }

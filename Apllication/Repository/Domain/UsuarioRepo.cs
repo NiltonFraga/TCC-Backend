@@ -1,6 +1,8 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Api.Domain.Request;
+using Api.Domain.Response;
 using Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,7 +14,7 @@ namespace Api.Apllication.Repository.Domain
 {
     public class UsuarioRepo : IUsuarioRepo
     {
-        public async Task<List<Usuario>> GetAllUsuario()
+        public async Task<List<Usuario>> GetAllUsuarios()
         {
             using var context = new ApiContext();
 
@@ -30,20 +32,33 @@ namespace Api.Apllication.Repository.Domain
             return usuario;
         }
 
-        /*public async Task<List<Usuario>> GetUsuarioByEmpresa(int id)
+        public async Task<Usuario> GetUsuarioByLogin(string login, string password)
         {
             using var context = new ApiContext();
 
-            var usuario = await context.Usuarios.Where(x => x.IdEmpresa == id).ToListAsync();
+            var usuario = await context.Usuarios
+                .Where(x => x.Email == login && x.Senha == password).FirstOrDefaultAsync();
 
             return usuario;
         }
-*/
-        public async Task PostUsuario(Usuario rq)
+
+        public async Task PostUsuario(UsuarioReq rq)
         {
             using var context = new ApiContext();
 
-            await context.Usuarios.AddAsync(rq);
+            var user = new Usuario()
+            {
+                Email = rq.Email,
+                Documento = rq.Documento,
+                Foto = rq.Foto,
+                Nome = rq.Nome,
+                Role = rq.Role,
+                Senha = rq.Senha,
+                DataCriacao = DateTime.Now,
+                DataAtualizacao = DateTime.Now
+            };
+
+            await context.Usuarios.AddAsync(user);
 
             await context.SaveChangesAsync();
 
@@ -67,6 +82,47 @@ namespace Api.Apllication.Repository.Domain
             context.Usuarios.Remove(usuario);
 
             await context.SaveChangesAsync();
+        }
+
+        public async Task<LoginRes> UpdateToken(Usuario user, string token)
+        {
+            using ApiContext context = new ApiContext();
+
+            user.Token = token;
+
+            context.Usuarios.Update(user);
+
+            await context.SaveChangesAsync();
+
+            var res = new LoginRes()
+            { 
+                Nome = user.Nome,
+                Email = user.Email,
+                Foto = user.Foto,
+                Role = user.Role,
+                Token = user.Token,
+                Documento = user.Documento
+            };
+
+            return res;
+        }
+
+        public async Task<bool> UpdatePassword(string email, string password)
+        {
+            using ApiContext context = new ApiContext();
+
+            var usuario = await context.Usuarios.Where(x => x.Email == email).FirstOrDefaultAsync();
+
+            if (usuario == null)
+                return false;
+
+            usuario.Senha = password;
+
+            context.Usuarios.Update(usuario);
+
+            await context.SaveChangesAsync();
+
+            return true;
         }
     }
 }

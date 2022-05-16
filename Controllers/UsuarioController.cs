@@ -1,6 +1,8 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Api.Domain.Request;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,15 +26,17 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("GetAllUsuarios")]
         public async Task<IActionResult> GetAllUsuarios()
         {
-            var res = await _usuarioRepo.GetAllUsuario();
+            var res = await _usuarioRepo.GetAllUsuarios();
 
             return Ok(res);
         }
 
         [HttpGet]
+        [Authorize]
         [Route("GetUsuario")]
         public async Task<IActionResult> GetUsuario(int id)
         {
@@ -42,8 +46,9 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("PostUsuario")]
-        public async Task<IActionResult> PostUsuariol(Usuario rq)
+        public async Task<IActionResult> PostUsuariol(UsuarioReq rq)
         {
             await _usuarioRepo.PostUsuario(rq);
 
@@ -51,6 +56,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("UpdateUsuario")]
         public async Task<IActionResult> UpdateUsuario(Usuario rq)
         {
@@ -60,6 +66,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("DeleteUsuario")]
         public async Task<IActionResult> DeleteUsuario(int id)
         {

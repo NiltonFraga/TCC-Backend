@@ -1,7 +1,11 @@
-﻿
-namespace Api.Domain
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Api.Domain.Request
 {
-    public class Usuario : Entity
+    public class UsuarioReq
     {
         public string Nome { get; set; }
         public string Documento { get; set; }
@@ -9,6 +13,5 @@ namespace Api.Domain
         public string Senha { get; set; }
         public string Role { get; set; }
         public string Email { get; set; }
-        public string Token { get; set; }
     }
 }

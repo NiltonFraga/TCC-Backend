@@ -1,6 +1,7 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -22,17 +23,19 @@ namespace Api.Controllers
             _logger = logger;
             _adocaoRepo = adocaoRepo;
         }
-
+        
         [HttpGet]
-        [Route("GetAllAdocaos")]
-        public async Task<IActionResult> GetAllAdocaos()
+        [Authorize]
+        [Route("GetAllAdocoes")]
+        public async Task<IActionResult> GetAllAdocoes()
         {
-            List<Adocao> res = await _adocaoRepo.GetAllAdocao();
+            List<Adocao> res = await _adocaoRepo.GetAllAdocoes();
 
             return Ok(res);
         }
 
         [HttpGet]
+        [Authorize]
         [Route("GetAdocao")]
         public async Task<IActionResult> GetAdocao(int id)
         {
@@ -42,6 +45,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("PostAdocao")]
         public async Task<IActionResult> PostAdocao(Adocao rq)
         {
@@ -51,6 +55,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("UpdateAdocao")]
         public async Task<IActionResult> UpdateAdocao(Adocao rq)
         {
@@ -60,6 +65,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("DeleteAdocao")]
         public async Task<IActionResult> DeleteAdocao(int id)
         {
