@@ -2,6 +2,8 @@ using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Apllication.Repository;
 using Api.Apllication.Repository.Domain;
+using Api.Apllication.Service;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -11,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
@@ -36,7 +39,7 @@ namespace Api
 
             services.AddControllers();
 
-            /*var key = Encoding.ASCII.GetBytes(TokenService.Secret);
+            var key = Encoding.ASCII.GetBytes(TokenService.Secret);
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,7 +56,7 @@ namespace Api
                       ValidateIssuer = false,
                       ValidateAudience = false
                   };
-              });*/
+              });
 
             services.AddSwaggerGen(c =>
             {
@@ -67,7 +70,7 @@ namespace Api
 
 
 
-                /*c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Description = "Insira o seu token JWT no campo.",
@@ -86,11 +89,13 @@ namespace Api
                       },
                       new string[] { }
                     }
-                  });*/
+                  });
             });
 
             services.AddSingleton<IAnimalRepo, AnimalRepo>();
-            services.AddSingleton<IEmpresaRepo, EmpresaRepo>();
+            services.AddSingleton<IUsuarioRepo, UsuarioRepo>();
+            services.AddSingleton<IAdocaoRepo, AdocaoRepo>();
+            services.AddSingleton<ILoginRepo, LoginRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -13,6 +13,7 @@ namespace Api.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Adocao> builder)
         {
             builder.HasKey(e => e.Id);
+            builder.ToTable("tb_adocao");
         }
     }
 }

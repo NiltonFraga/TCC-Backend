@@ -11,8 +11,7 @@ namespace Api.Infrastructure
     {
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Empresa> Empresas { get; set; }
-        public DbSet<Adocao> Adocaos { get; set; }
+        public DbSet<Adocao> Adocoes { get; set; }
 
         private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
 
@@ -28,7 +27,6 @@ namespace Api.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new AdocaoConfiguration());
             modelBuilder.ApplyConfiguration(new AnimalConfiguration());
-            modelBuilder.ApplyConfiguration(new EmpresaConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
 
             base.OnModelCreating(modelBuilder);

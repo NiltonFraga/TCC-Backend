@@ -1,6 +1,7 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,6 +25,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("GetAllAnimais")]
         public async Task<IActionResult> GetAllAnimais()
         {
@@ -33,6 +35,7 @@ namespace Api.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [Route("GetAnimal")]
         public async Task<IActionResult> GetAnimal(int id)
         {
@@ -42,6 +45,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Route("PostAnimal")]
         public async Task<IActionResult> PostAnimal(Animal rq)
         {
@@ -51,6 +55,7 @@ namespace Api.Controllers
         }
 
         [HttpPut]
+        [Authorize]
         [Route("UpdateAnimal")]
         public async Task<IActionResult> UpdateAnimal(Animal rq)
         {
@@ -60,6 +65,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete]
+        [Authorize]
         [Route("DeleteAnimal")]
         public async Task<IActionResult> DeleteAnimal(int id)
         {

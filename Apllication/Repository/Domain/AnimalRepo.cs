@@ -1,6 +1,7 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Api.Domain.Response;
 using Api.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -12,11 +13,37 @@ namespace Api.Apllication.Repository.Domain
 {
     public class AnimalRepo : IAnimalRepo
     {
-        public async Task<List<Animal>> GetAllAnimais()
+        public async Task<List<AnimalAdocaoRes>> GetAllAnimais()
         {
             using var context = new ApiContext();
 
-            var animais = await context.Animals.ToListAsync();
+            var animais = await context.Animals
+                .GroupJoin(
+                  context.Usuarios,
+                  i => i.Doador,
+                  p => p.Id,
+                  (i, p) => new { i, p }).SelectMany(temp => temp.p.DefaultIfEmpty(),
+                  (temp, p) =>
+                 new AnimalAdocaoRes
+                 {
+                     Id = temp.i.Id,
+                     Castrado = temp.i.Castrado,
+                     Descricao = temp.i.Descricao,
+                     Doenca = temp.i.Doenca,
+                     Endereco = temp.i.Endereco,
+                     Foto = temp.i.Foto,
+                     Idade = temp.i.Idade,
+                     Nome = temp.i.Nome,
+                     Pelagem = temp.i.Pelagem,
+                     Peso = temp.i.Peso,
+                     Tipo = temp.i.Tipo,
+                     Vacina = temp.i.Vacina,
+                     Vermifugado = temp.i.Vermifugado,
+                     Sexo = temp.i.Sexo,
+                     IdDoador = p.Id,
+                     NomeDoador = p.Nome,
+                     Role = p.Role
+                 }).ToListAsync();
 
             return animais;
         }
@@ -34,7 +61,7 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            var animal = await context.Animals.Where(x => x.IdEmpresa == id).ToListAsync();
+            var animal = await context.Animals.Where(x => x.Doador == id).ToListAsync();
 
             return animal;
         }

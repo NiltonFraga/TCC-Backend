@@ -13,6 +13,8 @@ namespace Api.Infrastructure.Configuration
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             builder.HasKey(e => e.Id);
+
+            builder.ToTable("tb_usuario");
         }
     }
 }
