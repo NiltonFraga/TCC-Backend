@@ -1,7 +1,9 @@
 ﻿using Api.Apllication.Interfaces;
 using Api.Apllication.Interfaces.Domain;
 using Api.Domain;
+using Api.Domain.Request;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -45,13 +47,22 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("PostAnimal")]
-        public async Task<IActionResult> PostAnimal(Animal rq)
+        public async Task<IActionResult> PostAnimal(AnimalReq rq)
         {
             await _animalRepo.PostAnimal(rq);
 
             return Ok();
+        }
+
+        [RequestSizeLimit(2147483648)]
+        [HttpPost]
+        [Route("UploadImageAnimal/{guid}")]
+        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, string guid)
+        {
+            var resul = await _animalRepo.UploadImageAnimal(file, guid);
+
+            return Ok(resul);
         }
 
         [HttpPut]
