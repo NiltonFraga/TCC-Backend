@@ -1,5 +1,7 @@
 ﻿using Api.Domain;
+using Api.Domain.Request;
 using Api.Domain.Response;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +14,8 @@ namespace Api.Apllication.Interfaces.Domain
         Task<List<AnimalAdocaoRes>> GetAllAnimais();
         Task<List<Animal>> GetAnimalByEmpresa(int id);
         Task<Animal> GetAnimal(int id);
-        Task PostAnimal(Animal rq);
+        Task PostAnimal(AnimalReq rq);
+        Task<bool> UploadImageAnimal(IFormFile file, string guid);
         Task UpdateAnimal(Animal rq);
         Task DeleteAnimal(int id);
     }
