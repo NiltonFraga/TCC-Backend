@@ -30,12 +30,19 @@ namespace Api.Apllication.Repository
         {
             Usuario user = await userRepo.GetUsuarioByLogin(login, password);
 
-            if (user == null)
-                return new LoginRes();
+            if (user != null)
+            {
+                if (user.Senha == password)
+                {
+                    string token = TokenService.GenerateToken(user);
 
-            string token = TokenService.GenerateToken(user);
-
-            return await userRepo.UpdateToken(user, token);
+                    return await userRepo.UpdateToken(user, token);
+                }                    
+                else
+                    throw new Exception("Senha incorreta!");
+            }
+            else
+                throw new Exception("Usuario não encontrado!");            
         }
 
         public async Task<LoginRes> CriarUsuario(UsuarioReq usi)
@@ -43,6 +50,11 @@ namespace Api.Apllication.Repository
             await userRepo.PostUsuario(usi);
 
             return await Login(usi.Email, usi.Senha);
+        }
+
+        public bool ValidateToken(string token)
+        {
+            return TokenService.ValidateToken(token);
         }
     }
 }

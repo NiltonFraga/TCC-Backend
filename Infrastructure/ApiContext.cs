@@ -12,8 +12,8 @@ namespace Api.Infrastructure
     {
         public DbSet<Animal> Animals { get; set; }
         public DbSet<Usuario> Usuarios { get; set; }
-        public DbSet<Adocao> Adocoes { get; set; }
         public DbSet<Arquivo> Arquivos { get; set; }
+        public DbSet<Servico> Servicos { get; set; }
 
         private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
 
@@ -27,10 +27,10 @@ namespace Api.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new AdocaoConfiguration());
             modelBuilder.ApplyConfiguration(new AnimalConfiguration());
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
             modelBuilder.ApplyConfiguration(new ArquivoConfiguration());
+            modelBuilder.ApplyConfiguration(new ServicoConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
