@@ -20,7 +20,9 @@ namespace Api.Domain
         public string Descricao { get; set; }          
         public string Foto { get; set; }  
         public int Doador { get; set; }
-        public string Endereco { get; set; }
+        public string Rua { get; set; }
+        public string Bairro { get; set; }
+        public string Cidade { get; set; }
         public bool Ativo { get; set; }
     }
 }

@@ -34,9 +34,11 @@ namespace Api.Apllication.Repository.Domain
                      Castrado = temp.i.Castrado,
                      Descricao = temp.i.Descricao,
                      Doenca = temp.i.Doenca,
-                     Endereco = temp.i.Endereco,
+                     Rua = temp.i.Rua,
+                     Bairro = temp.i.Bairro,
+                     Cidade = temp.i.Cidade,
                      Idade = temp.i.Idade,
-                     Foto = null,
+                     Foto = temp.i.Foto,
                      Nome = temp.i.Nome,
                      Pelagem = temp.i.Pelagem,
                      Peso = temp.i.Peso,
@@ -47,29 +49,127 @@ namespace Api.Apllication.Repository.Domain
                      IdDoador = p.Id,
                      NomeDoador = p.Nome,
                      Role = p.Role,
-                     Dados = context.Arquivos.Where(x => x.Guid == temp.i.Foto).Select(x => x.Dados).FirstOrDefault(),
-                     TipoDado = context.Arquivos.Where(x => x.Guid == temp.i.Foto).Select(x => x.Tipo).FirstOrDefault()
+                     Ativo = temp.i.Ativo
                  }).ToListAsync();
+
+            foreach(var op in animais){
+                var file = context.Arquivos.Where(x => x.Guid == op.Foto).FirstOrDefault();
+                if(file != null)
+                {
+                    var base64 = System.Convert.ToBase64String(file.Dados);
+                    var tipo = file.Tipo;
+                    op.Foto = $@"data:{tipo};base64,{base64}";
+                }
+                else
+                {
+                    op.Foto = null;
+                }                
+            }
 
             return animais;
         }
 
-        public async Task<Animal> GetAnimal(int id)
+        public async Task<AnimalAdocaoRes> GetAnimal(int id)
         {
             using var context = new ApiContext();
 
-            var animal = await context.Animals.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var animal = await context.Animals.Where(x => x.Id == id)
+                .GroupJoin(
+                  context.Usuarios,
+                  i => i.Doador,
+                  p => p.Id,
+                  (i, p) => new { i, p }).SelectMany(temp => temp.p.DefaultIfEmpty(),
+                  (temp, p) =>
+                 new AnimalAdocaoRes
+                 {
+                     Id = temp.i.Id,
+                     Castrado = temp.i.Castrado,
+                     Descricao = temp.i.Descricao,
+                     Doenca = temp.i.Doenca,
+                     Rua = temp.i.Rua,
+                     Bairro = temp.i.Bairro,
+                     Cidade = temp.i.Cidade,
+                     Idade = temp.i.Idade,
+                     Foto = temp.i.Foto,
+                     Nome = temp.i.Nome,
+                     Pelagem = temp.i.Pelagem,
+                     Peso = temp.i.Peso,
+                     Tipo = temp.i.Tipo,
+                     Vacina = temp.i.Vacina,
+                     Vermifugado = temp.i.Vermifugado,
+                     Sexo = temp.i.Sexo,
+                     IdDoador = p.Id,
+                     NomeDoador = p.Nome,
+                     Role = p.Role,
+                     Ativo = temp.i.Ativo
+                 }).FirstOrDefaultAsync();
+
+            var file = context.Arquivos.Where(x => x.Guid == animal.Foto).FirstOrDefault();
+            if (file != null)
+            {
+                var base64 = System.Convert.ToBase64String(file.Dados);
+                var tipo = file.Tipo;
+                animal.Foto = $@"data:{tipo};base64,{base64}";
+            }
+            else
+            {
+                animal.Foto = null;
+            }
 
             return animal;
         }
 
-        public async Task<List<Animal>> GetAnimalByEmpresa(int id)
+        public async Task<List<AnimalAdocaoRes>> GetAnimalByUsuario(int id)
         {
             using var context = new ApiContext();
 
-            var animal = await context.Animals.Where(x => x.Doador == id).ToListAsync();
+            var animais = await context.Animals.Where(x => x.Doador == id)
+                .GroupJoin(
+                  context.Usuarios,
+                  i => i.Doador,
+                  p => p.Id,
+                  (i, p) => new { i, p }).SelectMany(temp => temp.p.DefaultIfEmpty(),
+                  (temp, p) =>
+                 new AnimalAdocaoRes
+                 {
+                     Id = temp.i.Id,
+                     Castrado = temp.i.Castrado,
+                     Descricao = temp.i.Descricao,
+                     Doenca = temp.i.Doenca,
+                     Rua = temp.i.Rua,
+                     Bairro = temp.i.Bairro,
+                     Cidade = temp.i.Cidade,
+                     Idade = temp.i.Idade,
+                     Foto = temp.i.Foto,
+                     Nome = temp.i.Nome,
+                     Pelagem = temp.i.Pelagem,
+                     Peso = temp.i.Peso,
+                     Tipo = temp.i.Tipo,
+                     Vacina = temp.i.Vacina,
+                     Vermifugado = temp.i.Vermifugado,
+                     Sexo = temp.i.Sexo,
+                     IdDoador = p.Id,
+                     NomeDoador = p.Nome,
+                     Role = p.Role,
+                     Ativo = temp.i.Ativo
+                 }).ToListAsync();
 
-            return animal;
+            foreach (var op in animais)
+            {
+                var file = context.Arquivos.Where(x => x.Guid == op.Foto).FirstOrDefault();
+                if (file != null)
+                {
+                    var base64 = System.Convert.ToBase64String(file.Dados);
+                    var tipo = file.Tipo;
+                    op.Foto = $@"data:{tipo};base64,{base64}";
+                }
+                else
+                {
+                    op.Foto = null;
+                }
+            }
+
+            return animais;
         }
 
         public async Task PostAnimal(AnimalReq rq)
@@ -88,7 +188,9 @@ namespace Api.Apllication.Repository.Domain
                     Descricao = rq.Descricao,
                     Doador = rq.Doador,
                     Doenca = rq.Doenca,
-                    Endereco = rq.Endereco,
+                    Rua = rq.Rua,
+                    Bairro = rq.Bairro,
+                    Cidade = rq.Cidade,
                     Idade = rq.Idade,
                     Nome = rq.Nome,
                     Pelagem = rq.Pelagem,

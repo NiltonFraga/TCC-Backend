@@ -26,7 +26,7 @@ namespace Api.Controllers
             _animalRepo = animalRepo;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         [Route("GetAllAnimais")]
         public async Task<IActionResult> GetAllAnimais()
@@ -36,14 +36,33 @@ namespace Api.Controllers
             return Ok(res);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         [Route("GetAnimal")]
-        public async Task<IActionResult> GetAnimal(int id)
+        public async Task<IActionResult> GetAnimal(string id)
         {
-            var res = await _animalRepo.GetAnimal(id);
+            int ids = Int32.Parse(id);
+            var res = await _animalRepo.GetAnimal(ids);
 
             return Ok(res);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("GetAnimaisByUsuario")]
+        public async Task<IActionResult> GetAnimaisByUsuario(string id)
+        {
+            try
+            {
+                int ids = Int32.Parse(id);
+                var res = await _animalRepo.GetAnimalByUsuario(ids);
+
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
 
         [HttpPost]

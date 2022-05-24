@@ -28,12 +28,35 @@ namespace Api.Controllers
         [Route("Login")]
         public async Task<IActionResult> Authenticate(string usuario, string senha)
         {
-            var user = await _loginRepo.Login(usuario, senha);
+            try
+            {
+                var user = await _loginRepo.Login(usuario, senha);
 
-            if(user != null)
                 return Ok(user);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }
 
-            return BadRequest();
+        [HttpPost]
+        [Route("ValidateToken")]
+        public IActionResult ValidateToken(string token)
+        {
+            try{
+                var valido = _loginRepo.ValidateToken(token);
+
+                if (valido)
+                    return Ok();
+                else
+                    return BadRequest("Token Invalido!");
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]
@@ -49,9 +72,17 @@ namespace Api.Controllers
         [Route("CriarUsuario")]
         public async Task<IActionResult> PostUsuario(UsuarioReq rq)
         {
-            var login = await _loginRepo.CriarUsuario(rq);
+            try
+            {
+                var login = await _loginRepo.CriarUsuario(rq);
 
-            return Ok(login);
+                return Ok(login);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
     }
 }

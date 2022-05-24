@@ -7,6 +7,7 @@ namespace Api.Domain.Response
 {
     public class LoginRes
     {
+        public int Id { get; set; }
         public string Nome { get; set; }
         public string Documento { get; set; }
         public string Foto { get; set; }

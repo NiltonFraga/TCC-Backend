@@ -94,8 +94,8 @@ namespace Api
 
             services.AddSingleton<IAnimalRepo, AnimalRepo>();
             services.AddSingleton<IUsuarioRepo, UsuarioRepo>();
-            services.AddSingleton<IAdocaoRepo, AdocaoRepo>();
             services.AddSingleton<ILoginRepo, LoginRepo>();
+            services.AddSingleton<IServicoRepo, ServicoRepo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

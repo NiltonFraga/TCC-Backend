@@ -21,11 +21,14 @@ namespace Api.Domain.Response
         public string Doenca { get; set; }
         public string Vacina { get; set; }
         public string Descricao { get; set; }
-        public string Endereco { get; set; }
+        public string Rua { get; set; }
+        public string Bairro { get; set; }
+        public string Cidade { get; set; }
         public int IdDoador { get; set; }
         public string NomeDoador { get; set; }
         public string Role { get; set; }
         public byte[] Dados { get; set; }
         public string TipoDado { get; set; }
+        public bool Ativo { get; set; }
     }
 }

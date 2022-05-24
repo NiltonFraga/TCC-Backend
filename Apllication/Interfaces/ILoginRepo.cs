@@ -13,6 +13,6 @@ namespace Api.Apllication.Interfaces
         Task<bool> UpdatePassword(string email, string password);
         Task<LoginRes> Login(string login, string password);
         Task<LoginRes> CriarUsuario(UsuarioReq usuario);
-        //Task<Login> CriarEmpresa(Empresa usuario);
+        bool ValidateToken(string token);
     }
 }

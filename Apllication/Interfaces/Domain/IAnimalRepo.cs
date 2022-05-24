@@ -12,8 +12,8 @@ namespace Api.Apllication.Interfaces.Domain
     public interface IAnimalRepo
     {
         Task<List<AnimalAdocaoRes>> GetAllAnimais();
-        Task<List<Animal>> GetAnimalByEmpresa(int id);
-        Task<Animal> GetAnimal(int id);
+        Task<List<AnimalAdocaoRes>> GetAnimalByUsuario(int id);
+        Task<AnimalAdocaoRes> GetAnimal(int id);
         Task PostAnimal(AnimalReq rq);
         Task<bool> UploadImageAnimal(IFormFile file, string guid);
         Task UpdateAnimal(Animal rq);

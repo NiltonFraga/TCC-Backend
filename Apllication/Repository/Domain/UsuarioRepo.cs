@@ -96,6 +96,7 @@ namespace Api.Apllication.Repository.Domain
 
             var res = new LoginRes()
             { 
+                Id = user.Id,
                 Nome = user.Nome,
                 Email = user.Email,
                 Foto = user.Foto,
