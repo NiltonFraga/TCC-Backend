@@ -31,9 +31,17 @@ namespace Api.Controllers
         [Route("GetAllAnimais")]
         public async Task<IActionResult> GetAllAnimais()
         {
-            var res = await _animalRepo.GetAllAnimais();
+            try
+            {
+                var res = await _animalRepo.GetAllAnimais();
 
-            return Ok(res);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
         }
 
         [HttpPost]
@@ -41,10 +49,17 @@ namespace Api.Controllers
         [Route("GetAnimal")]
         public async Task<IActionResult> GetAnimal(string id)
         {
-            int ids = Int32.Parse(id);
-            var res = await _animalRepo.GetAnimal(ids);
+            try
+            {
+                int ids = Int32.Parse(id);
+                var res = await _animalRepo.GetAnimal(ids);
 
-            return Ok(res);
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
 
         [HttpPost]
@@ -69,9 +84,16 @@ namespace Api.Controllers
         [Route("PostAnimal")]
         public async Task<IActionResult> PostAnimal(AnimalReq rq)
         {
-            await _animalRepo.PostAnimal(rq);
+            try
+            {
+                await _animalRepo.PostAnimal(rq);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
         }
 
         [RequestSizeLimit(2147483648)]
@@ -79,9 +101,16 @@ namespace Api.Controllers
         [Route("UploadImageAnimal/{guid}")]
         public async Task<IActionResult> UploadImage([FromForm] IFormFile file, string guid)
         {
-            var resul = await _animalRepo.UploadImageAnimal(file, guid);
+            try
+            {
+                var resul = await _animalRepo.UploadImageAnimal(file, guid);
 
-            return Ok(resul);
+                return Ok(resul);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
 
         [HttpPut]
@@ -89,9 +118,16 @@ namespace Api.Controllers
         [Route("UpdateAnimal")]
         public async Task<IActionResult> UpdateAnimal(Animal rq)
         {
-            await _animalRepo.UpdateAnimal(rq);
+            try
+            {
+                await _animalRepo.UpdateAnimal(rq);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
 
         [HttpDelete]
@@ -99,9 +135,16 @@ namespace Api.Controllers
         [Route("DeleteAnimal")]
         public async Task<IActionResult> DeleteAnimal(int id)
         {
-            await _animalRepo.DeleteAnimal(id);
+            try
+            {
+                await _animalRepo.DeleteAnimal(id);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
     }
 }

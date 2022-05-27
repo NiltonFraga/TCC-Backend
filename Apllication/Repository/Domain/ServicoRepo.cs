@@ -16,8 +16,9 @@ namespace Api.Apllication.Repository.Domain
         public async Task<List<ServicoRes>> GetAllServisos()
         {
             using var context = new ApiContext();
-
-            var servicos = await context.Servicos
+            try
+            {
+                var servicos = await context.Servicos
                 .GroupJoin(
                   context.Usuarios,
                   i => i.DonoServico,
@@ -37,11 +38,18 @@ namespace Api.Apllication.Repository.Domain
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
-                     Foto = temp.i.Foto,
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
                      Nome = temp.i.Nome,
+                     Img = ""
                  }).ToListAsync();
 
-            return servicos;
+                return servicos;
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
 
         public async Task<ServicoRes> GetServicoById(int id)
@@ -68,18 +76,19 @@ namespace Api.Apllication.Repository.Domain
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
-                     Foto = temp.i.Foto,
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
                      Nome = temp.i.Nome,
+                     Img = ""
                  }).FirstOrDefaultAsync();
 
             return servico;
         }
 
-        public async Task<ServicoRes> GetServicoByUsuario(int id)
+        public async Task<List<ServicoRes>> GetServicoByUsuario(int id)
         {
             using var context = new ApiContext();
 
-            var servico = await context.Servicos.Where(x => x.DonoServico == id)
+            var servicoS = await context.Servicos.Where(x => x.DonoServico == id)
                 .GroupJoin(
                   context.Usuarios,
                   i => i.DonoServico,
@@ -99,11 +108,12 @@ namespace Api.Apllication.Repository.Domain
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
-                     Foto = temp.i.Foto,
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
                      Nome = temp.i.Nome,
-                 }).FirstOrDefaultAsync();
+                     Img = ""
+                 }).ToListAsync();
 
-            return servico;
+            return servicoS;
         }
 
         public async Task<List<ServicoRes>> GetServicoByTipo(string tipo)
@@ -130,7 +140,7 @@ namespace Api.Apllication.Repository.Domain
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
-                     Foto = temp.i.Foto,
+                     Imagem = context.Arquivos.Where(x => x.Guid ==  temp.i.IdImagem).FirstOrDefault(),
                      Nome = temp.i.Nome,
                  }).ToListAsync();
 
@@ -143,6 +153,8 @@ namespace Api.Apllication.Repository.Domain
 
             try
             {
+                var guid = Guid.NewGuid().ToString().Replace("-", "");
+
                 var servico = new Servico()
                 {
                     DataAtualizacao = DateTime.Now,
@@ -153,14 +165,23 @@ namespace Api.Apllication.Repository.Domain
                     Cidade = rq.Cidade,
                     Nome = rq.Nome,
                     Tipo = rq.Tipo,
-                    Foto = rq.Foto,
+                    IdImagem = guid,
                     DonoServico = rq.DonoServico,
                     Desconto = rq.Desconto,
                     Telefone1 = rq.Telefone1,
                     Telefone2 = rq.Telefone2
                 };
 
+                var imagem = new Arquivo()
+                {
+                    Guid = guid,
+                    Nome = rq.Imagem.Nome,
+                    Tipo = rq.Imagem.Tipo,
+                    Dados = rq.Imagem.Dados,
+                };
+
                 await context.Servicos.AddAsync(servico);
+                await context.Arquivos.AddAsync(imagem);
 
                 await context.SaveChangesAsync();
             }
@@ -174,8 +195,11 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
+            var guid = Guid.NewGuid().ToString().Replace("-", "");
+
             var servico = new Servico()
             {
+                Id = rq.Id,
                 DataAtualizacao = DateTime.Now,
                 DataCriacao = rq.DataCriacao,
                 Descricao = rq.Descricao,
@@ -184,14 +208,24 @@ namespace Api.Apllication.Repository.Domain
                 Cidade = rq.Cidade,
                 Nome = rq.Nome,
                 Tipo = rq.Tipo,
-                Foto = rq.Foto,
+                IdImagem = guid,
                 DonoServico = rq.DonoServico,
                 Desconto = rq.Desconto,
                 Telefone1 = rq.Telefone1,
                 Telefone2 = rq.Telefone2
             };
 
+            var imagem = new Arquivo()
+            {
+                Id = rq.Imagem.Id,
+                Guid = guid,
+                Nome = rq.Imagem.Nome,
+                Tipo = rq.Imagem.Tipo,
+                Dados = rq.Imagem.Dados,
+            };
+
             context.Servicos.Update(servico);
+            context.Arquivos.Update(imagem);
 
             await context.SaveChangesAsync();
         }
@@ -201,8 +235,14 @@ namespace Api.Apllication.Repository.Domain
             using var context = new ApiContext();
 
             var servico = await context.Servicos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var produto = await context.Produtos.Where(x => x.IdServico == servico.Id).FirstOrDefaultAsync();
+            var imagemServico = await context.Arquivos.Where(x => x.Guid == servico.IdImagem).FirstOrDefaultAsync();
+            var imagemProduto = await context.Arquivos.Where(x => x.Guid == produto.IdImagem).FirstOrDefaultAsync();
 
             context.Servicos.Remove(servico);
+            context.Produtos.Remove(produto);
+            context.Arquivos.Remove(imagemServico);
+            context.Arquivos.Remove(imagemProduto);
 
             await context.SaveChangesAsync();
         }
