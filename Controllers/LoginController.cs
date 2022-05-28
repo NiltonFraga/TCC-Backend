@@ -63,9 +63,16 @@ namespace Api.Controllers
         [Route("UpdatePassword")]
         public async Task<ActionResult<dynamic>> UpdatePassword(string email, string senha)
         {
-            await _loginRepo.UpdatePassword(email, senha);
+            try
+            {
+                await _loginRepo.UpdatePassword(email, senha);
 
-            return Ok();
+                return Ok();
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }            
         }
 
         [HttpPost]

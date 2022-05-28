@@ -14,6 +14,7 @@ namespace Api.Infrastructure
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Arquivo> Arquivos { get; set; }
         public DbSet<Servico> Servicos { get; set; }
+        public DbSet<Produto> Produtos { get; set; }
 
         private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
 
@@ -31,6 +32,7 @@ namespace Api.Infrastructure
             modelBuilder.ApplyConfiguration(new UsuarioConfiguration());
             modelBuilder.ApplyConfiguration(new ArquivoConfiguration());
             modelBuilder.ApplyConfiguration(new ServicoConfiguration());
+            modelBuilder.ApplyConfiguration(new ProdutoConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

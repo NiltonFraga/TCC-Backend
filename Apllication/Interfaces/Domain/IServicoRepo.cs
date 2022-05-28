@@ -12,7 +12,7 @@ namespace Api.Apllication.Interfaces.Domain
         Task<List<ServicoRes>> GetAllServisos();
         Task<ServicoRes> GetServicoById(int id);
         Task<List<ServicoRes>> GetServicoByTipo(string tipo);
-        Task<ServicoRes> GetServicoByUsuario(int id);
+        Task<List<ServicoRes>> GetServicoByUsuario(int id);
         Task PostServico(ServicoReq rq);
         Task UpdateServico(ServicoReq rq);
         Task DeleteServico(int id);

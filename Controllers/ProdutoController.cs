@@ -15,25 +15,25 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ServicoController : ControllerBase
+    public class ProdutoController : ControllerBase
     {
-        private readonly IServicoRepo _servicoRepo;
-        private readonly ILogger<ServicoController> _logger;
+        private readonly IProdutoRepo _produtoRepo;
+        private readonly ILogger<ProdutoController> _logger;
 
-        public ServicoController(ILogger<ServicoController> logger, IServicoRepo servicoRepo)
+        public ProdutoController(ILogger<ProdutoController> logger, IProdutoRepo produtoRepo)
         {
             _logger = logger;
-            _servicoRepo = servicoRepo;
+            _produtoRepo = produtoRepo;
         }
 
         [HttpPost]
         [Authorize]
-        [Route("GetAllServico")]
+        [Route("GetAllProduto")]
         public async Task<IActionResult> GetAllServico()
         {
             try
             {
-                var res = await _servicoRepo.GetAllServisos();
+                var res = await _produtoRepo.GetAllProdutos();
 
                 return Ok(res);
             }
@@ -46,13 +46,13 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("GetServicoById")]
-        public async Task<IActionResult> GetServicoById(string id)
+        [Route("GetProdutosByServico")]
+        public async Task<IActionResult> GetProdutosByServico(string id)
         {
             try
             {
                 int ids = Int32.Parse(id);
-                var res = await _servicoRepo.GetServicoById(ids);
+                var res = await _produtoRepo.GetProdutosByServico(ids);
 
                 return Ok(res);
             }
@@ -64,13 +64,13 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("GetServicoByUsuario")]
-        public async Task<IActionResult> GetServicoByUsuario(string id)
+        [Route("GetProdutoById")]
+        public async Task<IActionResult> GetProdutoById(string id)
         {
             try
             {
                 int ids = Int32.Parse(id);
-                var res = await _servicoRepo.GetServicoByUsuario(ids);
+                var res = await _produtoRepo.GetProdutosById(ids);
 
                 return Ok(res);
             }
@@ -82,29 +82,12 @@ namespace Api.Controllers
 
         [HttpPost]
         [Authorize]
-        [Route("GetServicoByTipo")]
-        public async Task<IActionResult> GetServicoByTipo(string tipo)
+        [Route("PostProduto")]
+        public async Task<IActionResult> PostProduto(ProdutoReq rq)
         {
             try
             {
-                var res = await _servicoRepo.GetServicoByTipo(tipo);
-
-                return Ok(res);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-        }
-
-        [HttpPost]
-        [Authorize]
-        [Route("PostServico")]
-        public async Task<IActionResult> PostServico(ServicoReq rq)
-        {
-            try
-            {
-                await _servicoRepo.PostServico(rq);
+                await _produtoRepo.PostProduto(rq);
 
                 return Ok();
             }
@@ -112,28 +95,26 @@ namespace Api.Controllers
             {
                 return BadRequest(e.Message);
             }
-            
         }
 
         [HttpPost]
         [Authorize]
-        [Route("UpdateServico")]
-        public async Task<IActionResult> UpdateServico(ServicoReq rq)
+        [Route("UpdateProduto")]
+        public async Task<IActionResult> UpdateProduto(ProdutoReq rq)
         {
-            await _servicoRepo.UpdateServico(rq);
+            await _produtoRepo.UpdateProduto(rq);
 
             return Ok();
         }
 
         [HttpPost]
         [Authorize]
-        [Route("DeleteServico")]
-        public async Task<IActionResult> DeleteServico(int id)
+        [Route("DeleteProduto")]
+        public async Task<IActionResult> DeleteProduto(int id)
         {
             try
             {
-                await _servicoRepo.DeleteServico(id);
-
+                await _produtoRepo.DeleteProduto(id);
                 return Ok();
             }
             catch (Exception e)
