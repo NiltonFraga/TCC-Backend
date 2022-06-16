@@ -100,6 +100,7 @@ namespace Api
             services.AddSingleton<IPostRepo, PostRepo>(); 
             services.AddSingleton<IComentarioRepo, ComentarioRepo>(); 
             services.AddSingleton<ICurtidaRepo, CurtidaRepo>(); 
+            services.AddSingleton<IAnimalFavoritoRepo, AnimalFavoritoRepo>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

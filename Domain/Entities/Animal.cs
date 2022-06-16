@@ -17,12 +17,12 @@ namespace Api.Domain
         public bool Vermifugado { get; set; }
         public string Doenca { get; set; }
         public string Vacina { get; set; }
-        public string Descricao { get; set; }          
-        public string Foto { get; set; }  
+        public string Descricao { get; set; } 
         public int Doador { get; set; }
         public string Rua { get; set; }
         public string Bairro { get; set; }
         public string Cidade { get; set; }
+        public string IdImagem { get; set; }
         public bool Ativo { get; set; }
     }
 }

@@ -12,11 +12,11 @@ namespace Api.Apllication.Interfaces.Domain
     public interface IAnimalRepo
     {
         Task<List<AnimalAdocaoRes>> GetAllAnimais();
-        Task<List<AnimalAdocaoRes>> GetAnimalByUsuario(int id);
         Task<AnimalAdocaoRes> GetAnimal(int id);
+        Task<List<AnimalAdocaoRes>> GetAnimalByUsuario(int id);
         Task PostAnimal(AnimalReq rq);
-        Task<bool> UploadImageAnimal(IFormFile file, string guid);
-        Task UpdateAnimal(Animal rq);
+        Task UpdateAnimal(AnimalReq rq);
         Task DeleteAnimal(int id);
+        Task<List<AnimalAdocaoRes>> GetAnimaisFavorito(int id);
     }
 }

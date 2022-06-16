@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Api.Domain.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,9 +16,8 @@ namespace Api.Domain.Response
         public string Sexo { get; set; }
         public double Peso { get; set; }
         public string Pelagem { get; set; }
-        public string Foto { get; set; }
-        public bool Castrado { get; set; }
-        public bool Vermifugado { get; set; }
+        public string Castrado { get; set; }
+        public string Vermifugado { get; set; }
         public string Doenca { get; set; }
         public string Vacina { get; set; }
         public string Descricao { get; set; }
@@ -26,9 +26,12 @@ namespace Api.Domain.Response
         public string Cidade { get; set; }
         public int IdDoador { get; set; }
         public string NomeDoador { get; set; }
+        public string Ativo { get; set; }
+        public string Img { get; set; }
+        public Arquivo Imagem { get; set; }
         public string Role { get; set; }
-        public byte[] Dados { get; set; }
-        public string TipoDado { get; set; }
-        public bool Ativo { get; set; }
+        public string Telefone1 { get; set; }
+        public string Telefone2 { get; set; }
+        public List<int> IdsUsuariosQueFavoritaram { get; set; }
     }
 }

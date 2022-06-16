@@ -18,6 +18,7 @@ namespace Api.Infrastructure
         public DbSet<Post> Posts { get; set; }
         public DbSet<Comentario> Comentarios { get; set; }
         public DbSet<Curtida> Curtidas { get; set; }
+        public DbSet<AnimalFavorito> AnimalFavoritos { get; set; }
 
         private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
 
@@ -39,6 +40,7 @@ namespace Api.Infrastructure
             modelBuilder.ApplyConfiguration(new PostConfiguration());
             modelBuilder.ApplyConfiguration(new ComentarioConfiguration());
             modelBuilder.ApplyConfiguration(new CurtidaConfiguration());
+            modelBuilder.ApplyConfiguration(new AnimalFavoritoConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }

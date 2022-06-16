@@ -25,7 +25,7 @@ namespace Api.Controllers
             _usuarioRepo = usuarioRepo;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         [Route("GetAllUsuarios")]
         public async Task<IActionResult> GetAllUsuarios()
@@ -35,7 +35,7 @@ namespace Api.Controllers
             return Ok(res);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Authorize]
         [Route("GetUsuario")]
         public async Task<IActionResult> GetUsuario(int id)
@@ -43,6 +43,16 @@ namespace Api.Controllers
             var res = await _usuarioRepo.GetUsuario(id);
 
             return Ok(res);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [Route("UpdateCredenciais")]
+        public async Task<IActionResult> UpdateCredenciais(UsuarioUpdateReq rq)
+        {
+            await _usuarioRepo.UpdateCredenciais(rq);
+
+            return Ok();
         }
 
         [HttpPost]
@@ -55,7 +65,7 @@ namespace Api.Controllers
             return Ok();
         }
 
-        [HttpPut]
+        [HttpPost]
         [Authorize]
         [Route("UpdateUsuario")]
         public async Task<IActionResult> UpdateUsuario(Usuario rq)
@@ -65,7 +75,7 @@ namespace Api.Controllers
             return Ok();
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Authorize]
         [Route("DeleteUsuario")]
         public async Task<IActionResult> DeleteUsuario(int id)

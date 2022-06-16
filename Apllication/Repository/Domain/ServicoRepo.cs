@@ -185,9 +185,9 @@ namespace Api.Apllication.Repository.Domain
 
                 await context.SaveChangesAsync();
             }
-            catch (Exception ec)
+            catch (Exception e)
             {
-                Console.WriteLine(ec);
+                throw new Exception(e.Message);
             }
         }
 
@@ -234,17 +234,35 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            var servico = await context.Servicos.Where(x => x.Id == id).FirstOrDefaultAsync();
-            var produto = await context.Produtos.Where(x => x.IdServico == servico.Id).FirstOrDefaultAsync();
-            var imagemServico = await context.Arquivos.Where(x => x.Guid == servico.IdImagem).FirstOrDefaultAsync();
-            var imagemProduto = await context.Arquivos.Where(x => x.Guid == produto.IdImagem).FirstOrDefaultAsync();
+            try
+            {
+                var servico = await context.Servicos.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var imagemServico = await context.Arquivos.Where(x => x.Guid == servico.IdImagem).FirstOrDefaultAsync();
+                var produto = await context.Produtos.Where(x => x.IdServico == servico.Id).ToListAsync();
+                if (produto.Count() != 0)
+                {
+                    var idImagemProduto = produto.Select(x => x.IdImagem).ToList();
+                    context.Produtos.RemoveRange(produto);
+                    var imagemProduto = await context.Arquivos.Where(x => idImagemProduto.Contains(x.Guid)).ToListAsync();
+                    if(imagemProduto.Count() != 0)
+                    {
+                        context.Arquivos.RemoveRange(imagemProduto);
+                    }
+                }                
 
-            context.Servicos.Remove(servico);
-            context.Produtos.Remove(produto);
-            context.Arquivos.Remove(imagemServico);
-            context.Arquivos.Remove(imagemProduto);
+                context.Servicos.Remove(servico);    
+                
+                if(imagemServico != null)
+                    context.Arquivos.Remove(imagemServico);
+                
 
-            await context.SaveChangesAsync();
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+            
         }
     }
 }

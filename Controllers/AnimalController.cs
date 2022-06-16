@@ -81,6 +81,23 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
+        [Route("GetAnimaisFavorito")]
+        public async Task<IActionResult> GetAnimaisFavorito(int id)
+        {
+            try
+            {
+                var res = await _animalRepo.GetAnimaisFavorito(id);
+
+                return Ok(res);
+            }
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+        }        
+
+        [HttpPost]
         [Route("PostAnimal")]
         public async Task<IActionResult> PostAnimal(AnimalReq rq)
         {
@@ -96,27 +113,9 @@ namespace Api.Controllers
             }
         }
 
-        [RequestSizeLimit(2147483648)]
         [HttpPost]
-        [Route("UploadImageAnimal/{guid}")]
-        public async Task<IActionResult> UploadImage([FromForm] IFormFile file, string guid)
-        {
-            try
-            {
-                var resul = await _animalRepo.UploadImageAnimal(file, guid);
-
-                return Ok(resul);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }            
-        }
-
-        [HttpPut]
-        [Authorize]
         [Route("UpdateAnimal")]
-        public async Task<IActionResult> UpdateAnimal(Animal rq)
+        public async Task<IActionResult> UpdateAnimal(AnimalReq rq)
         {
             try
             {
@@ -130,7 +129,7 @@ namespace Api.Controllers
             }            
         }
 
-        [HttpDelete]
+        [HttpPost]
         [Authorize]
         [Route("DeleteAnimal")]
         public async Task<IActionResult> DeleteAnimal(int id)

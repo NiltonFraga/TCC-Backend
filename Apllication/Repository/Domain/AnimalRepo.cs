@@ -31,40 +31,27 @@ namespace Api.Apllication.Repository.Domain
                  new AnimalAdocaoRes
                  {
                      Id = temp.i.Id,
-                     Castrado = temp.i.Castrado,
+                     Castrado = temp.i.Castrado == true ? "true" : "false",
                      Descricao = temp.i.Descricao,
                      Doenca = temp.i.Doenca,
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
                      Idade = temp.i.Idade,
-                     Foto = temp.i.Foto,
                      Nome = temp.i.Nome,
                      Pelagem = temp.i.Pelagem,
                      Peso = temp.i.Peso,
                      Tipo = temp.i.Tipo,
                      Vacina = temp.i.Vacina,
-                     Vermifugado = temp.i.Vermifugado,
+                     Vermifugado = temp.i.Vermifugado == true ? "true" : "false",
                      Sexo = temp.i.Sexo,
                      IdDoador = p.Id,
                      NomeDoador = p.Nome,
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
                      Role = p.Role,
-                     Ativo = temp.i.Ativo
+                     Ativo = temp.i.Ativo == true ? "true" : "false",
+                     Img = ""
                  }).ToListAsync();
-
-            foreach(var op in animais){
-                var file = context.Arquivos.Where(x => x.Guid == op.Foto).FirstOrDefault();
-                if(file != null)
-                {
-                    var base64 = System.Convert.ToBase64String(file.Dados);
-                    var tipo = file.Tipo;
-                    op.Foto = $@"data:{tipo};base64,{base64}";
-                }
-                else
-                {
-                    op.Foto = null;
-                }                
-            }
 
             return animais;
         }
@@ -83,38 +70,30 @@ namespace Api.Apllication.Repository.Domain
                  new AnimalAdocaoRes
                  {
                      Id = temp.i.Id,
-                     Castrado = temp.i.Castrado,
+                     Castrado = temp.i.Castrado == true ? "true" : "false",
                      Descricao = temp.i.Descricao,
                      Doenca = temp.i.Doenca,
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
                      Idade = temp.i.Idade,
-                     Foto = temp.i.Foto,
                      Nome = temp.i.Nome,
                      Pelagem = temp.i.Pelagem,
                      Peso = temp.i.Peso,
                      Tipo = temp.i.Tipo,
                      Vacina = temp.i.Vacina,
-                     Vermifugado = temp.i.Vermifugado,
+                     Vermifugado = temp.i.Vermifugado == true ? "true" : "false",
                      Sexo = temp.i.Sexo,
                      IdDoador = p.Id,
                      NomeDoador = p.Nome,
                      Role = p.Role,
-                     Ativo = temp.i.Ativo
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
+                     Ativo = temp.i.Ativo == true ? "true" : "false",
+                     Img = "",
+                     Telefone1 = p.Telefone1,
+                     Telefone2 = p.Telefone2,
+                     IdsUsuariosQueFavoritaram = context.AnimalFavoritos.Where(x => x.IdAnimal == temp.i.Id).Select(x => x.IdUsuario).ToList()
                  }).FirstOrDefaultAsync();
-
-            var file = context.Arquivos.Where(x => x.Guid == animal.Foto).FirstOrDefault();
-            if (file != null)
-            {
-                var base64 = System.Convert.ToBase64String(file.Dados);
-                var tipo = file.Tipo;
-                animal.Foto = $@"data:{tipo};base64,{base64}";
-            }
-            else
-            {
-                animal.Foto = null;
-            }
 
             return animal;
         }
@@ -133,41 +112,68 @@ namespace Api.Apllication.Repository.Domain
                  new AnimalAdocaoRes
                  {
                      Id = temp.i.Id,
-                     Castrado = temp.i.Castrado,
+                     Castrado = temp.i.Castrado == true ? "true" : "false",
                      Descricao = temp.i.Descricao,
                      Doenca = temp.i.Doenca,
                      Rua = temp.i.Rua,
                      Bairro = temp.i.Bairro,
                      Cidade = temp.i.Cidade,
                      Idade = temp.i.Idade,
-                     Foto = temp.i.Foto,
                      Nome = temp.i.Nome,
                      Pelagem = temp.i.Pelagem,
                      Peso = temp.i.Peso,
                      Tipo = temp.i.Tipo,
                      Vacina = temp.i.Vacina,
-                     Vermifugado = temp.i.Vermifugado,
+                     Vermifugado = temp.i.Vermifugado == true ? "true" : "false",
                      Sexo = temp.i.Sexo,
                      IdDoador = p.Id,
                      NomeDoador = p.Nome,
                      Role = p.Role,
-                     Ativo = temp.i.Ativo
+                     Ativo = temp.i.Ativo == true ? "true" : "false",
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
+                     Img = ""
                  }).ToListAsync();
 
-            foreach (var op in animais)
-            {
-                var file = context.Arquivos.Where(x => x.Guid == op.Foto).FirstOrDefault();
-                if (file != null)
-                {
-                    var base64 = System.Convert.ToBase64String(file.Dados);
-                    var tipo = file.Tipo;
-                    op.Foto = $@"data:{tipo};base64,{base64}";
-                }
-                else
-                {
-                    op.Foto = null;
-                }
-            }
+            return animais;
+        }
+
+        public async Task<List<AnimalAdocaoRes>> GetAnimaisFavorito(int id)
+        {
+            using var context = new ApiContext();
+
+            var favoritos = await context.AnimalFavoritos.Where(x => x.IdUsuario == id).Select(x => x.IdAnimal).ToListAsync();
+
+            var animais = await context.Animals.Where(x => favoritos.Contains(x.Id))
+                .GroupJoin(
+                  context.Usuarios,
+                  i => i.Doador,
+                  p => p.Id,
+                  (i, p) => new { i, p }).SelectMany(temp => temp.p.DefaultIfEmpty(),
+                  (temp, p) =>
+                 new AnimalAdocaoRes
+                 {
+                     Id = temp.i.Id,
+                     Castrado = temp.i.Castrado == true ? "true" : "false",
+                     Descricao = temp.i.Descricao,
+                     Doenca = temp.i.Doenca,
+                     Rua = temp.i.Rua,
+                     Bairro = temp.i.Bairro,
+                     Cidade = temp.i.Cidade,
+                     Idade = temp.i.Idade,
+                     Nome = temp.i.Nome,
+                     Pelagem = temp.i.Pelagem,
+                     Peso = temp.i.Peso,
+                     Tipo = temp.i.Tipo,
+                     Vacina = temp.i.Vacina,
+                     Vermifugado = temp.i.Vermifugado == true ? "true" : "false",
+                     Sexo = temp.i.Sexo,
+                     IdDoador = p.Id,
+                     NomeDoador = p.Nome,
+                     Role = p.Role,
+                     Ativo = temp.i.Ativo == true ? "true" : "false",
+                     Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
+                     Img = ""
+                 }).ToListAsync();
 
             return animais;
         }
@@ -179,10 +185,12 @@ namespace Api.Apllication.Repository.Domain
             
             try
             {
+                var guid = Guid.NewGuid().ToString().Replace("-", "");
+
                 var animal = new Animal()
                 {
-                    Ativo = rq.Ativo,
-                    Castrado = rq.Castrado,
+                    Ativo = rq.Ativo == "true",
+                    Castrado = rq.Castrado == "true",
                     DataAtualizacao = DateTime.Now,
                     DataCriacao = DateTime.Now,
                     Descricao = rq.Descricao,
@@ -198,11 +206,20 @@ namespace Api.Apllication.Repository.Domain
                     Sexo = rq.Sexo,
                     Tipo = rq.Tipo,
                     Vacina = rq.Vacina,
-                    Vermifugado = rq.Vermifugado,
-                    Foto = rq.Guid
+                    Vermifugado = rq.Vermifugado == "true",
+                    IdImagem = guid
+                };
+
+                var imagem = new Arquivo()
+                {
+                    Guid = guid,
+                    Nome = rq.Imagem.Nome,
+                    Tipo = rq.Imagem.Tipo,
+                    Dados = rq.Imagem.Dados,
                 };
 
                 await context.Animals.AddAsync(animal);
+                await context.Arquivos.AddAsync(imagem);
 
                 await context.SaveChangesAsync();
             }
@@ -212,48 +229,55 @@ namespace Api.Apllication.Repository.Domain
             }
         }
 
-        public async Task<bool> UploadImageAnimal(IFormFile file, string guid)
+        public async Task UpdateAnimal(AnimalReq rq)
         {
             using var context = new ApiContext();
             
             try
             {
+                var guid = Guid.NewGuid().ToString().Replace("-", "");
 
-                MemoryStream ms = new MemoryStream();
-                file.OpenReadStream().CopyTo(ms);
-
-                var _file = new Arquivo()
+                var animal = new Animal()
                 {
-                    Nome = file.FileName,
-                    Dados = ms.ToArray(),
-                    Tipo = file.ContentType,
-                    Guid = guid
-
+                    Id = rq.Id,
+                    Ativo = rq.Ativo == "true",
+                    Castrado = rq.Castrado == "true",
+                    DataAtualizacao = DateTime.Now,
+                    DataCriacao = DateTime.Now,
+                    Descricao = rq.Descricao,
+                    Doador = rq.Doador,
+                    Doenca = rq.Doenca,
+                    Rua = rq.Rua,
+                    Bairro = rq.Bairro,
+                    Cidade = rq.Cidade,
+                    Idade = rq.Idade,
+                    Nome = rq.Nome,
+                    Pelagem = rq.Pelagem,
+                    Peso = rq.Peso,
+                    Sexo = rq.Sexo,
+                    Tipo = rq.Tipo,
+                    Vacina = rq.Vacina,
+                    Vermifugado = rq.Vermifugado == "true",
+                    IdImagem = guid
                 };
 
-                await context.Arquivos.AddAsync(_file);
-                await context.SaveChangesAsync();
+                var imagem = new Arquivo()
+                {
+                    Id = rq.Imagem.Id,
+                    Guid = guid,
+                    Nome = rq.Imagem.Nome,
+                    Tipo = rq.Imagem.Tipo,
+                    Dados = rq.Imagem.Dados,
+                };
 
-                return true;
+                context.Animals.Update(animal);
+                context.Arquivos.Update(imagem);
+                await context.SaveChangesAsync();
             }
             catch(Exception ex)
             {
                 Console.WriteLine(ex.Message);
             }
-
-            return false;
-
-            //var animal = await context.Animals.Where(x => x.Guid == guid).FirstOrDefaultAsync();
-
-        }
-
-        public async Task UpdateAnimal(Animal rq)
-        {
-            using var context = new ApiContext();
-
-            context.Animals.Update(rq);
-
-            await context.SaveChangesAsync();
         }
 
         public async Task DeleteAnimal(int id)
@@ -261,8 +285,10 @@ namespace Api.Apllication.Repository.Domain
             using var context = new ApiContext();
 
             var animal = await context.Animals.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var imagem = await context.Arquivos.Where(x => x.Id == id).FirstOrDefaultAsync();
 
             context.Animals.Remove(animal);
+            context.Arquivos.Remove(imagem);
 
             await context.SaveChangesAsync();
         }

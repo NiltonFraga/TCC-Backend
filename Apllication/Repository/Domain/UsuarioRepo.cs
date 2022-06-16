@@ -23,13 +23,89 @@ namespace Api.Apllication.Repository.Domain
             return usuario;
         }
 
-        public async Task<Usuario> GetUsuario(int id)
+        public async Task<UsuarioRes> GetUsuario(int id)
         {
             using var context = new ApiContext();
 
-            var usuario = await context.Usuarios.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var user = await context.Usuarios.Where(x => x.Id == id).FirstOrDefaultAsync();
+
+            var usuario = new UsuarioRes()
+            {
+                Nome = user.Nome,
+                Documento = user.Documento,
+                Email = user.Email,
+                Role = user.Role,
+                Telefone1 = user.Telefone1,
+                Telefone2 = user.Telefone2,
+                QuantAnimaisDoados = await context.Animals.Where(x => x.Doador == user.Id && x.Ativo == false).CountAsync(),
+                QuantSevicosCadastrados = await context.Servicos.Where(x => x.DonoServico == user.Id).CountAsync(),
+                QuantProdutosCadastrados = await context.Produtos.Where(x => x.IdDonoProduto == user.Id).CountAsync(),
+            };
 
             return usuario;
+        }
+
+        public async Task UpdateCredenciais(UsuarioUpdateReq rq)
+        {
+            using var context = new ApiContext();
+
+            try
+            {
+                var usuario = await context.Usuarios.Where(x => x.Id == rq.Id).FirstOrDefaultAsync();
+
+                if (!string.IsNullOrEmpty(rq.Senha))
+                    usuario.Senha = rq.Senha;
+
+                if (!string.IsNullOrEmpty(rq.Email))
+                    usuario.Email = rq.Email;
+
+                if (!string.IsNullOrEmpty(rq.Nome))
+                    usuario.Nome = rq.Nome;
+
+                if (!string.IsNullOrEmpty(rq.Telefone1))
+                    usuario.Telefone1 = rq.Telefone1;
+
+                if (!string.IsNullOrEmpty(rq.Telefone2))
+                    usuario.Telefone2 = rq.Telefone2;
+
+                context.Usuarios.Update(usuario);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
+        }
+
+        public async Task DeleteUsuario(int id)
+        {
+            using var context = new ApiContext();
+
+            try
+            {
+                var usuario = await context.Usuarios.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var animal = await context.Animals.Where(x => x.Doador == id).ToArrayAsync();
+                var servico = await context.Servicos.Where(x => x.DonoServico == id).ToArrayAsync();
+                var produto = await context.Produtos.Where(x => x.IdDonoProduto == id).ToArrayAsync();
+                var post = await context.Posts.Where(x => x.IdUsuario == id).ToArrayAsync();
+                var comentario = await context.Comentarios.Where(x => x.IdUsuario == id).ToArrayAsync();
+                var curtida = await context.Curtidas.Where(x => x.IdUsuario == id).ToArrayAsync();
+                var favoritos = await context.AnimalFavoritos.Where(x => x.IdUsuario == id).ToArrayAsync();
+
+                context.Usuarios.Remove(usuario);
+                context.Animals.RemoveRange(animal);
+                context.Servicos.RemoveRange(servico);
+                context.Produtos.RemoveRange(produto);
+                context.Posts.RemoveRange(post);
+                context.Comentarios.RemoveRange(comentario);
+                context.Curtidas.RemoveRange(curtida);
+                context.AnimalFavoritos.RemoveRange(favoritos);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                throw new Exception(e.Message);
+            }
         }
 
         public async Task<Usuario> GetUsuarioByLogin(string login, string password)
@@ -74,17 +150,7 @@ namespace Api.Apllication.Repository.Domain
 
             await context.SaveChangesAsync();
         }
-
-        public async Task DeleteUsuario(int id)
-        {
-            using var context = new ApiContext();
-
-            var usuario = await context.Usuarios.Where(x => x.Id == id).FirstOrDefaultAsync();
-
-            context.Usuarios.Remove(usuario);
-
-            await context.SaveChangesAsync();
-        }
+        
 
         public async Task<LoginRes> UpdateToken(Usuario user, string token)
         {
