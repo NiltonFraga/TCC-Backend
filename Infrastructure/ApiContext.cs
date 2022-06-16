@@ -20,7 +20,7 @@ namespace Api.Infrastructure
         public DbSet<Curtida> Curtidas { get; set; }
         public DbSet<AnimalFavorito> AnimalFavoritos { get; set; }
 
-        private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
+        private readonly string ConectionString = "Server=34.82.46.175;Port=3306;Database=pets_database;User=root;Password=root";
 
         public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
         public ApiContext() { }
