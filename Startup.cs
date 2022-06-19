@@ -3,6 +3,7 @@ using Api.Apllication.Interfaces.Domain;
 using Api.Apllication.Repository;
 using Api.Apllication.Repository.Domain;
 using Api.Apllication.Service;
+using Api.Chat;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,9 +36,19 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors();
+            services.AddCors(options => options.AddPolicy("CorsPolicy", 
+            builder => 
+            {
+                builder
+                    .AllowAnyMethod()
+                    .AllowAnyHeader()
+                    .WithOrigins("http://localhost:4200")
+                    .AllowCredentials();                    
+            }));
 
             services.AddControllers();
+
+            services.AddSignalR();
 
             var key = Encoding.ASCII.GetBytes(TokenService.Secret);
             services.AddAuthentication(x =>
@@ -101,6 +112,8 @@ namespace Api
             services.AddSingleton<IComentarioRepo, ComentarioRepo>(); 
             services.AddSingleton<ICurtidaRepo, CurtidaRepo>(); 
             services.AddSingleton<IAnimalFavoritoRepo, AnimalFavoritoRepo>(); 
+            services.AddSingleton<IChatRepo, ChatRepo>(); 
+            services.AddSingleton<IConversaRepo, ConversaRepo>(); 
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -113,10 +126,7 @@ namespace Api
 
             app.UsePathBase(new PathString("/api"));
 
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            app.UseCors("CorsPolicy");
             
             app.UseHttpsRedirection();
 
@@ -138,6 +148,7 @@ namespace Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chatsocket");
             });
         }
     }

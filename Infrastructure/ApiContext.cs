@@ -19,8 +19,11 @@ namespace Api.Infrastructure
         public DbSet<Comentario> Comentarios { get; set; }
         public DbSet<Curtida> Curtidas { get; set; }
         public DbSet<AnimalFavorito> AnimalFavoritos { get; set; }
+        public DbSet<ChatDto> Chats { get; set; }
+        public DbSet<Conversa> Conversas { get; set; }
 
-        private readonly string ConectionString = "Server=34.82.46.175;Port=3306;Database=pets_database;User=root;Password=root";
+        private readonly string ConectionString = "Server=localhost;Port=3306;Database=pets_database;User=root;Password=root";
+        //private readonly string ConectionString = "Server=34.82.46.175;Port=3306;Database=pets_database;User=root;Password=root";
 
         public ApiContext(DbContextOptions<ApiContext> options) : base(options) { }
         public ApiContext() { }
@@ -41,6 +44,8 @@ namespace Api.Infrastructure
             modelBuilder.ApplyConfiguration(new ComentarioConfiguration());
             modelBuilder.ApplyConfiguration(new CurtidaConfiguration());
             modelBuilder.ApplyConfiguration(new AnimalFavoritoConfiguration());
+            modelBuilder.ApplyConfiguration(new ChatDtoConfiguration());
+            modelBuilder.ApplyConfiguration(new ConversaConfiguration());
 
             base.OnModelCreating(modelBuilder);
         }
