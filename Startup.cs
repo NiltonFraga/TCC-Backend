@@ -36,15 +36,7 @@ namespace Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options => options.AddPolicy("CorsPolicy", 
-            builder => 
-            {
-                builder
-                    .AllowAnyMethod()
-                    .AllowAnyHeader()
-                    .WithOrigins("http://localhost:4200")
-                    .AllowCredentials();                    
-            }));
+            services.AddCors();
 
             services.AddControllers();
 
@@ -126,8 +118,11 @@ namespace Api
 
             app.UsePathBase(new PathString("/api"));
 
-            app.UseCors("CorsPolicy");
-            
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
             app.UseHttpsRedirection();
 
             app.UseStaticFiles();
@@ -148,7 +143,6 @@ namespace Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
-                endpoints.MapHub<ChatHub>("/chatsocket");
             });
         }
     }
