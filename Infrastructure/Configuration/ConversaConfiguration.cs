@@ -15,7 +15,7 @@ namespace Api.Infrastructure.Configuration
         {
             builder.HasKey(e => e.Id);
 
-            builder.ToTable("Conversa");
+            builder.ToTable("tb_conversa");
         }
     }
 }
