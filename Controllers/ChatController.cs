@@ -84,7 +84,7 @@ namespace Api.Controllers
         [HttpPost]
         [Authorize]
         [Route("DeleteChat")]
-        public async Task<IActionResult> DeleteChat(int id)
+        public async Task<IActionResult> DeleteChat(string id)
         {
             try
             {

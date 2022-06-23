@@ -33,5 +33,6 @@ namespace Api.Domain.Response
         public string Telefone1 { get; set; }
         public string Telefone2 { get; set; }
         public List<int> IdsUsuariosQueFavoritaram { get; set; }
+        public DateTime? DataCriacao { get; set; }
     }
 }

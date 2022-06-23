@@ -32,6 +32,8 @@ namespace Api.Apllication.Repository.Domain
                         Menssagem = x.Menssagem,
                         UsuarioOrigem = x.UsuarioOrigem,
                         UsuarioDestino = x.UsuarioDestino,
+                        NomeDestino = context.Usuarios.Where(z => z.Id == x.UsuarioDestino).Select(z => z.Nome).FirstOrDefault(),
+                        NomeOrigem = context.Usuarios.Where(z => z.Id == x.UsuarioOrigem).Select(z => z.Nome).FirstOrDefault(),
                         Leitura = x.Leitura
                     }).ToListAsync();
 
@@ -74,6 +76,8 @@ namespace Api.Apllication.Repository.Domain
                         Menssagem = x.Menssagem,
                         UsuarioOrigem = x.UsuarioOrigem,
                         UsuarioDestino = x.UsuarioDestino,
+                        NomeDestino = context.Usuarios.Where(z => z.Id == x.UsuarioDestino).Select(z => z.Nome).FirstOrDefault(),
+                        NomeOrigem = context.Usuarios.Where(z => z.Id == x.UsuarioOrigem).Select(z => z.Nome).FirstOrDefault(),
                         Leitura = x.Leitura
                     }).ToListAsync();
 

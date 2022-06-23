@@ -59,6 +59,14 @@ namespace Api.Apllication.Repository.Domain
 
                 var conversas = new List<ChatDto>();
 
+                var guidUser = context.Chats.Where(x => x.User == rq.IdUsuario).Select(x => x.Guid).ToList();
+                var guidDestinatario = context.Chats.Where(x => x.User == rq.IdDestinatario).Select(x => x.Guid).ToList();
+
+                if(guidUser.Contains(string.Join(", ", guidDestinatario)))
+                {
+                    return;
+                }
+
                 conversas.Add(new ChatDto()
                 {
                     DataCriacao = DateTime.Now,
@@ -83,13 +91,13 @@ namespace Api.Apllication.Repository.Domain
             }
         }
 
-        public async Task DeleteChat(int id)
+        public async Task DeleteChat(string id)
         {
             using var context = new ApiContext();
 
             try
             {
-                var chat = await context.Chats.Where(x => x.Id == id).FirstOrDefaultAsync();
+                var chat = await context.Chats.Where(x => x.Guid == id).ToListAsync();
 
                 context.Chats.RemoveRange(chat);
 

@@ -21,7 +21,7 @@ namespace Api.Apllication.Repository.Domain
         {
             using var context = new ApiContext();
 
-            var animais = await context.Animals
+            var animais = await context.Animals.Where(x => x.Ativo == true)
                 .GroupJoin(
                   context.Usuarios,
                   i => i.Doador,
@@ -50,8 +50,9 @@ namespace Api.Apllication.Repository.Domain
                      Imagem = context.Arquivos.Where(x => x.Guid == temp.i.IdImagem).FirstOrDefault(),
                      Role = p.Role,
                      Ativo = temp.i.Ativo == true ? "true" : "false",
-                     Img = ""
-                 }).ToListAsync();
+                     Img = "",
+                     DataCriacao = temp.i.DataCriacao
+                 }).OrderByDescending(x => x.DataCriacao).ToListAsync();
 
             return animais;
         }
@@ -143,7 +144,7 @@ namespace Api.Apllication.Repository.Domain
 
             var favoritos = await context.AnimalFavoritos.Where(x => x.IdUsuario == id).Select(x => x.IdAnimal).ToListAsync();
 
-            var animais = await context.Animals.Where(x => favoritos.Contains(x.Id))
+            var animais = await context.Animals.Where(x => favoritos.Contains(x.Id) && x.Ativo == true)
                 .GroupJoin(
                   context.Usuarios,
                   i => i.Doador,

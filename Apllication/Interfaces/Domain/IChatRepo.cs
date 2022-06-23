@@ -11,6 +11,6 @@ namespace Api.Apllication.Interfaces.Domain
     {
         Task<List<ChatRes>> GetChatById(int id);
         Task PostChat(ChatReq rq);
-        Task DeleteChat(int id);
+        Task DeleteChat(string id);
     }
 }
