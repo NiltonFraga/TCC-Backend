@@ -47,9 +47,20 @@ namespace Api.Apllication.Repository
 
         public async Task<LoginRes> CriarUsuario(UsuarioReq usi)
         {
-            await userRepo.PostUsuario(usi);
+            if(await userRepo.GetUsuarioByEmailAndDoc(usi.Email, usi.Documento) == null)
+            {
+                await userRepo.PostUsuario(usi);
 
-            return await Login(usi.Email, usi.Senha);
+                return await Login(usi.Email, usi.Senha);
+
+            }
+            else
+            {
+                throw new Exception("Email ou CPF/CNPJ já cadastratos");
+
+            }
+
+            
         }
 
         public bool ValidateToken(string token)

@@ -118,6 +118,14 @@ namespace Api.Apllication.Repository.Domain
             return usuario;
         }
 
+        public async Task<Usuario> GetUsuarioByEmailAndDoc(string email, string doc)
+        {
+            using var context = new ApiContext();
+
+            return await context.Usuarios
+                .Where(x => x.Email == email || x.Documento == doc).FirstOrDefaultAsync();
+        }
+
         public async Task PostUsuario(UsuarioReq rq)
         {
             using var context = new ApiContext();

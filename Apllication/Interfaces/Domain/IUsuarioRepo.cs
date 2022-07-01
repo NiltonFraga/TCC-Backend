@@ -18,6 +18,7 @@ namespace Api.Apllication.Interfaces.Domain
         Task DeleteUsuario(int id);
         Task<LoginRes> UpdateToken(Usuario user, string token);
         Task<bool> UpdatePassword(string email, string password);
+        Task<Usuario> GetUsuarioByEmailAndDoc(string email, string doc);
         Task UpdateCredenciais(UsuarioUpdateReq rq);
     }
 }
