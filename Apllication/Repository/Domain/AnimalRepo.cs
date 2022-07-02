@@ -286,7 +286,7 @@ namespace Api.Apllication.Repository.Domain
             using var context = new ApiContext();
 
             var animal = await context.Animals.Where(x => x.Id == id).FirstOrDefaultAsync();
-            var imagem = await context.Arquivos.Where(x => x.Id == id).FirstOrDefaultAsync();
+            var imagem = await context.Arquivos.Where(x => x.Guid == animal.IdImagem).FirstOrDefaultAsync();
 
             context.Animals.Remove(animal);
             context.Arquivos.Remove(imagem);
